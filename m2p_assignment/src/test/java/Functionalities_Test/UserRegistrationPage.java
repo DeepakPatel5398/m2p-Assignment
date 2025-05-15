@@ -22,9 +22,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class UserRegistrationPage {
 	
+	// globally declared 
 		WebDriver driver;
 		
-		
+		// useing dataprovied annotation to get multilpe testdata from excelsheet and store in 2d array of object
 		@DataProvider(name = "getData")
 		public  Object[][] getData() throws EncryptedDocumentException, IOException {
 			DataExtractor dt=new DataExtractor();
@@ -35,16 +36,22 @@ public class UserRegistrationPage {
 		
 		@BeforeMethod(alwaysRun = true)
 		public void setup() {
+
+			// initial setup 
 			WebDriverManager.chromedriver().setup();
 			driver=new ChromeDriver();
 			driver.manage().window().maximize();
 			driver.get("https://demowebshop.tricentis.com/");
 			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+			// top header register button located by xpath and clicked 
 			driver.findElement(By.xpath("//a[@class='ico-register']")).click();
 		}
 		
 		
 		@Test(dataProvider = "getData")
+
+		// testdata from data provider will store in the respective parameters given 
 		public void userRegistrationProcess(String fname, String lname, String email, String pass, String cpass) throws InterruptedException {
 			
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -58,7 +65,7 @@ public class UserRegistrationPage {
 			WebElement registerButton=driver.findElement(By.cssSelector("#register-button")); 
 			
 			
-			
+			// applying actions on the webelement located above using respective methods
 			firstName.sendKeys(fname);
 			lastName.sendKeys(lname);
 			enterEmail.sendKeys(email);
@@ -72,6 +79,7 @@ public class UserRegistrationPage {
 		@AfterMethod
 		public void teardown() throws InterruptedException {
 			Thread.sleep(2000);
+			// this will close all the window after execution of the all the test
 			driver.quit();
 		}
 		
